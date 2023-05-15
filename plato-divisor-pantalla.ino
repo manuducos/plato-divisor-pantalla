@@ -748,7 +748,7 @@ boolean debounce(boolean last)         // la funcion antirebote
  // esta funcion es para mover el motor con el 10K potentiometer. 
 void move_motorRun(int velocidad, boolean dir, char Page)  // page = 5 for run mode
 {
-    digitalWrite(motorDIRpin,dir);        // set Direction
+    digitalWrite(motorDIRpin, !dir);        // set Direction
   
     if (Page =='5')   
     {
@@ -762,7 +762,7 @@ void move_motorRun(int velocidad, boolean dir, char Page)  // page = 5 for run m
 }
 
 
-void move_motor(unsigned long end, boolean dir)
+void move_motor(int end, boolean dir)
 {
     pinMode(XM, OUTPUT);
     pinMode(YP, OUTPUT);
