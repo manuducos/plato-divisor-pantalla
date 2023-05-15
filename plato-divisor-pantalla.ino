@@ -125,6 +125,8 @@ int theStop = 0;
 float theRealStop;
 float dif;
 
+int cur_pos = 0;
+
 
 void setup() {
     Serial.begin(9600);
@@ -201,7 +203,7 @@ void loop()
         }
     }
 
-    if(currentPage =='2'){ 
+    if (currentPage =='2') { 
 
         if (CWstatus ==1)
             cur_dir = CW;
@@ -235,7 +237,11 @@ void loop()
                 tft.setCursor(265, 170);                                  
                 tft.setTextSize(3);
                 tft.setTextColor(BLACK);  // clears the previous number
-                tft.print(counter);
+                tft.print(cur_pos);
+
+                if (CWstatus == 1) cur_pos++;
+                if (CCWstatus == 1) cur_pos--;
+                if (cur_pos == Number || cur_pos == (-Number)) cur_pos = 0;
             
                 pinMode(XM, OUTPUT);
                 pinMode(YP, OUTPUT);
@@ -247,7 +253,7 @@ void loop()
                 tft.setCursor(265, 170);                                  
                 tft.setTextSize(3);
                 tft.setTextColor(YELLOW);
-                tft.print(counter);
+                tft.print(cur_pos);
             }
                     
             if (stepperMode==2)   // if you are in the Run menu
@@ -308,7 +314,7 @@ void loop()
                 currentPage = '6'; 
                 tft.fillScreen(BLACK);
                 drawKeypad(); 
-                counter = 0;                       // when keypad is pressed, current position and number of divisions is reset
+                cur_pos = 0;                       // when keypad is pressed, current position and number of divisions is reset
                 num_divisions = 0; 
             }
 
@@ -778,7 +784,7 @@ void approach(int end, boolean dir) {
   int pulsewidth = fast;
   int motorspeeddelay = fast;
 
-  if (dir == CCW) {
+  if (dir == CW) {
     digitalWrite(motorDIRpin, LOW);
     while (counter < (end - approachTolerance)) {
       // These four lines result in 1 step:
@@ -796,7 +802,7 @@ void approach(int end, boolean dir) {
       digitalWrite(motorSTEPpin, LOW);
       delayMicroseconds(motorspeeddelay);
     }
-  } else if (dir == CW) {
+  } else if (dir == CCW) {
     digitalWrite(motorDIRpin, HIGH);
     while (counter > (end + approachTolerance)) {
       // These four lines result in 1 step:
