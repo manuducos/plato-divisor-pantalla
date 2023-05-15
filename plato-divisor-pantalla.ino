@@ -332,14 +332,14 @@ void loop()
     if(currentPage =='5')
     { 
         int potReading = analogRead(potAnalogPin);
-        int runSpeed = map(potReading, 0, 1023, 500, 15000);
+        int runSpeed = map(potReading, 0, 1023, 50, 500);
 
-        if (CWstatus ==1)
+        if (CWstatus == 1)
             cur_dir = CW;
-        if (CCWstatus ==1)
+        if (CCWstatus == 1)
             cur_dir = CCW;  
         
-        move_motorRun(runSpeed, cur_dir,currentPage);
+        move_motorRun(runSpeed, cur_dir, currentPage);
             
             TSPoint p = ts.getPoint();  //Get touch point
         
@@ -412,7 +412,11 @@ void loop()
         }
     }
 
-    checkPos(theStop);
+    if (currentPage != '5') {
+        checkPos(theStop);
+    } else {
+        theStop = counter;
+    }
 }
 
 
@@ -784,7 +788,7 @@ void approach(int end, boolean dir) {
   int pulsewidth = fast;
   int motorspeeddelay = fast;
 
-  if (dir == CW) {
+  if (dir == CCW) {
     digitalWrite(motorDIRpin, LOW);
     while (counter < (end - approachTolerance)) {
       // These four lines result in 1 step:
@@ -802,7 +806,7 @@ void approach(int end, boolean dir) {
       digitalWrite(motorSTEPpin, LOW);
       delayMicroseconds(motorspeeddelay);
     }
-  } else if (dir == CCW) {
+  } else if (dir == CW) {
     digitalWrite(motorDIRpin, HIGH);
     while (counter > (end + approachTolerance)) {
       // These four lines result in 1 step:
