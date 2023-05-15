@@ -502,7 +502,7 @@ void drawVelocidad ()
     tft.setCursor(38,35);
     tft.setTextColor(WHITE);
     tft.setTextSize(3);
-    tft.print("Que volocidad?");
+    tft.print("Que velocidad?");
 
     //  display no frame:
     tft.drawRect(190,90,100,60,CYAN);
