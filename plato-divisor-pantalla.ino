@@ -110,8 +110,8 @@ boolean result = false;
 
 volatile int counterPrev, counter = 0; //This variable will increase or decrease depending on the rotation of encoder
 
-#define encoderA 22
-#define encoderB 23
+#define encoderA 18
+#define encoderB 19
 
 #define pulsesPerRevolution 600  // pulsos del encoder. 
 
