@@ -778,7 +778,7 @@ void approach(int end, boolean dir) {
   int pulsewidth = fast;
   int motorspeeddelay = fast;
 
-  if (dir == LOW) {
+  if (dir == CCW) {
     digitalWrite(motorDIRpin, LOW);
     while (counter < (end - approachTolerance)) {
       // These four lines result in 1 step:
@@ -796,7 +796,7 @@ void approach(int end, boolean dir) {
       digitalWrite(motorSTEPpin, LOW);
       delayMicroseconds(motorspeeddelay);
     }
-  } else if (dir == HIGH) {
+  } else if (dir == CW) {
     digitalWrite(motorDIRpin, HIGH);
     while (counter > (end + approachTolerance)) {
       // These four lines result in 1 step:
