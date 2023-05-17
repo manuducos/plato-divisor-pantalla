@@ -344,29 +344,30 @@ void loop()
         if (CWstatus == 1) cur_dir = CW;
         if (CCWstatus == 1) cur_dir = CCW;  
         
-        move_motorRun(runSpeed, cur_dir, 'currentPage');
+        move_motorRun(runSpeed, cur_dir, currentPage);
 
-        if(millis() - Time >= 1000) {
+        int timeDif = millis() - Time;
+        if (timeDif >= 1000) {
             pinMode(XM, OUTPUT);
             pinMode(YP, OUTPUT);
             tft.setCursor(110, 35);                                  
             tft.setTextSize(3);
-            tft.setTextColor(ILI9341_ORANGE);  // clears the previous number
+            tft.setTextColor(WHITE);  // clears the previous number
             tft.print(RPM);
 
-            pulsos = ISRCounter;
+            pulsos = 1000 * ISRCounter / timeDif;
             RPM = 60 * pulsos / (pulsesPerRevolution * 2);
 
             pinMode(XM, OUTPUT);
             pinMode(YP, OUTPUT);
             tft.setCursor(38, 35);   //display current position
-            tft.setTextColor(WHITE);
+            tft.setTextColor(BLACK);
             tft.setTextSize(3);
             tft.print("RPM:");
             
             tft.setCursor(110, 35);                                  
             tft.setTextSize(3);
-            tft.setTextColor(WHITE);
+            tft.setTextColor(BLACK);
             tft.print(RPM);
             
             //se reestablecen los valores
@@ -506,15 +507,15 @@ void drawDivisiones()
 
 
 void drawRPM() {
-    tft.fillRect(20,20, 270, 50, ILI9341_ORANGE);  // (x location, y location, widgth, height, color) or rectangle fill
+    tft.fillRect(20,20, 270, 50, WHITE);  // (x location, y location, widgth, height, color) or rectangle fill
     tft.drawRect(20,20,270,50,WHITE);
     tft.setCursor(38, 35);
-    tft.setTextColor(WHITE);
+    tft.setTextColor(BLACK);
     tft.setTextSize(3);
     tft.print("RPM: ");
 
     tft.setCursor(110, 35);
-    tft.setTextColor(WHITE);
+    tft.setTextColor(BLACK);
     tft.setTextSize(3);
     tft.print(RPM);
 
