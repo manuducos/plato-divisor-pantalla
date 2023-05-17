@@ -350,7 +350,7 @@ void loop()
         pinMode(YP, OUTPUT);
         tft.setCursor(110, 35);                                  
         tft.setTextSize(3);
-        tft.setTextColor(BLACK);  // clears the previous number
+        tft.setTextColor(ILI9341_ORANGE);  // clears the previous number
         tft.print(RPM);
 
         if(millis() - Time >= 1000) {
@@ -370,13 +370,13 @@ void loop()
         pinMode(XM, OUTPUT);
         pinMode(YP, OUTPUT);
         tft.setCursor(38, 35);   //display current position
-        tft.setTextColor(YELLOW);
+        tft.setTextColor(WHITE);
         tft.setTextSize(3);
         tft.print("RPM:");
         
         tft.setCursor(110, 35);                                  
         tft.setTextSize(3);
-        tft.setTextColor(YELLOW);
+        tft.setTextColor(WHITE);
         tft.print(RPM);
 
             
