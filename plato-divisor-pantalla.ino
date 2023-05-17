@@ -127,6 +127,12 @@ float dif;
 
 int cur_pos = 0;
 
+// Medidor RPM
+volatile int ISRCounter = 0;
+unsigned int pulsos = 0;
+unsigned long Time = 0; 
+unsigned int RPM = 0;
+
 
 void setup() {
     Serial.begin(9600);
@@ -159,6 +165,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(encoderB), ai1, RISING);
 
     theRealStop = counter;
+    Time = millis();
 }
 
 
@@ -196,7 +203,7 @@ void loop()
                 //Erase the screen
                 tft.fillScreen(BLACK);
                 currentPage = '5';
-                drawVelocidad();
+                drawRPM();
                 stepperMode = 2;
                 drawDirection();
             }
@@ -340,8 +347,42 @@ void loop()
             cur_dir = CCW;  
         
         move_motorRun(runSpeed, cur_dir, currentPage);
+
+        pinMode(XM, OUTPUT);
+        pinMode(YP, OUTPUT);
+        tft.setCursor(110, 35);                                  
+        tft.setTextSize(3);
+        tft.setTextColor(BLACK);  // clears the previous number
+        tft.print(RPM);
+
+        if(millis() - Time >= 1000) {
+            pulsos = ISRCounter;
+            RPM = 60 * pulsos / (pulsesPerRevolution * 2);
             
-            TSPoint p = ts.getPoint();  //Get touch point
+            //se reestablecen los valores
+            ISRCounter = 0;
+            pulsos = 0;
+            Time = millis();
+        }
+
+        if (CWstatus == 1) cur_pos++;
+        if (CCWstatus == 1) cur_pos--;
+        if (cur_pos == Number || cur_pos == (-Number)) cur_pos = 0;
+    
+        pinMode(XM, OUTPUT);
+        pinMode(YP, OUTPUT);
+        tft.setCursor(38, 35);   //display current position
+        tft.setTextColor(YELLOW);
+        tft.setTextSize(3);
+        tft.print("RPM:");
+        
+        tft.setCursor(110, 35);                                  
+        tft.setTextSize(3);
+        tft.setTextColor(YELLOW);
+        tft.print(RPM);
+
+            
+        TSPoint p = ts.getPoint();  //Get touch point
         
         p.x = map(p.x, TS_MAXX, TS_MINX, 0, 320);  /// orientation of x and y are potrait, see serial output
         p.y = map(p.y, TS_MAXY, TS_MINY, 0, 240);
@@ -471,38 +512,18 @@ void drawDivisiones()
 }
 
 
-void drawPasitos ()
-{
-    //  "Cuantas"
+void drawRPM() {
     tft.fillRect(20,20, 270, 50, ILI9341_ORANGE);  // (x location, y location, widgth, height, color) or rectangle fill
     tft.drawRect(20,20,270,50,WHITE);
-    tft.setCursor(38,35);
-    tft.setTextColor(WHITE);
-    tft.setTextSize(2);
-    tft.print("Cuantos pasos?");
-
-    //  display no frame:
-    tft.drawRect(190,90,100,60,CYAN);
-
-    //  "Back Button"
-    tft.fillRoundRect(250,215, 50, 20,5, BLUE);  // (x location, y location, widgth, height, color) or rectangle fill
-    tft.drawRoundRect(250,215, 50, 20,5,WHITE);
-    tft.setCursor(262,218);
-    tft.setTextColor(WHITE);
-    tft.setTextSize(2);
-    tft.print("<-");
-}
-
-
-void drawVelocidad ()
-{
-    //  "Cuantas"
-    tft.fillRect(20,20, 270, 50, ILI9341_ORANGE);  // (x location, y location, widgth, height, color) or rectangle fill
-    tft.drawRect(20,20,270,50,WHITE);
-    tft.setCursor(38,35);
+    tft.setCursor(38, 35);
     tft.setTextColor(WHITE);
     tft.setTextSize(3);
-    tft.print("Que velocidad?");
+    tft.print("RPM: ");
+
+    tft.setCursor(110, 35);
+    tft.setTextColor(WHITE);
+    tft.setTextSize(3);
+    tft.print(RPM);
 
     //  display no frame:
     tft.drawRect(190,90,100,60,CYAN);
@@ -758,7 +779,7 @@ boolean debounce(boolean last)         // la funcion antirebote
  // esta funcion es para mover el motor con el 10K potentiometer. 
 void move_motorRun(int velocidad, boolean dir, char Page)  // page = 5 for run mode
 {
-    digitalWrite(motorDIRpin, !dir);        // set Direction
+    digitalWrite(motorDIRpin, dir);        // set Direction
   
     if (Page =='5')   
     {
@@ -870,6 +891,8 @@ void ai0() {
   } else {
     counter--;
   }
+
+  ISRCounter++; // RPM
 }
    
 
@@ -881,4 +904,6 @@ void ai1() {
   } else {
     counter++;
   }
+
+  ISRCounter++; // RPM
 }
