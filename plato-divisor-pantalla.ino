@@ -336,17 +336,15 @@ void loop()
         }
     }
 
-    if(currentPage =='5')
+    if(currentPage == '5')
     { 
         int potReading = analogRead(potAnalogPin);
         int runSpeed = map(potReading, 0, 1023, 50, 500);
 
-        if (CWstatus == 1)
-            cur_dir = CW;
-        if (CCWstatus == 1)
-            cur_dir = CCW;  
+        if (CWstatus == 1) cur_dir = CW;
+        if (CCWstatus == 1) cur_dir = CCW;  
         
-        move_motorRun(runSpeed, cur_dir, currentPage);
+        move_motorRun(runSpeed, CW, '5');
 
         pinMode(XM, OUTPUT);
         pinMode(YP, OUTPUT);
@@ -793,11 +791,7 @@ void move_motorRun(int velocidad, boolean dir, char Page)  // page = 5 for run m
 }
 
 
-void move_motor(int end, boolean dir)
-{
-    pinMode(XM, OUTPUT);
-    pinMode(YP, OUTPUT);
-
+void move_motor(int end, boolean dir) {
     approach(end, dir);
     correct(end);
     delay(500);
