@@ -344,7 +344,7 @@ void loop()
         if (CWstatus == 1) cur_dir = CW;
         if (CCWstatus == 1) cur_dir = CCW;  
         
-        move_motorRun(runSpeed, CW, '5');
+        move_motorRun(runSpeed, cur_dir, 'currentPage');
 
         if(millis() - Time >= 1000) {
             pinMode(XM, OUTPUT);
@@ -374,18 +374,6 @@ void loop()
             pulsos = 0;
             Time = millis();
         }
-    
-        pinMode(XM, OUTPUT);
-        pinMode(YP, OUTPUT);
-        tft.setCursor(38, 35);   //display current position
-        tft.setTextColor(WHITE);
-        tft.setTextSize(3);
-        tft.print("RPM:");
-        
-        tft.setCursor(110, 35);                                  
-        tft.setTextSize(3);
-        tft.setTextColor(WHITE);
-        tft.print(RPM);
             
         TSPoint p = ts.getPoint();  //Get touch point
         
