@@ -133,6 +133,10 @@ unsigned int pulsos = 0;
 unsigned long Time = 0; 
 unsigned int RPM = 0;
 
+// Velocidades minimas y maximas del potenciometro (Modo Corre)
+#define potMax 50
+#define potMin 1000
+
 
 void setup() {
     Serial.begin(9600);
@@ -339,7 +343,7 @@ void loop()
     if(currentPage == '5')
     { 
         int potReading = analogRead(potAnalogPin);
-        int runSpeed = map(potReading, 0, 1023, 50, 500);
+        int runSpeed = map(potReading, 0, 1023, potMax, potMin);
 
         if (CWstatus == 1) cur_dir = CW;
         if (CCWstatus == 1) cur_dir = CCW;  
