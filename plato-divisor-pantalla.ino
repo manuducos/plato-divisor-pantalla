@@ -346,26 +346,34 @@ void loop()
         
         move_motorRun(runSpeed, CW, '5');
 
-        pinMode(XM, OUTPUT);
-        pinMode(YP, OUTPUT);
-        tft.setCursor(110, 35);                                  
-        tft.setTextSize(3);
-        tft.setTextColor(ILI9341_ORANGE);  // clears the previous number
-        tft.print(RPM);
-
         if(millis() - Time >= 1000) {
+            pinMode(XM, OUTPUT);
+            pinMode(YP, OUTPUT);
+            tft.setCursor(110, 35);                                  
+            tft.setTextSize(3);
+            tft.setTextColor(ILI9341_ORANGE);  // clears the previous number
+            tft.print(RPM);
+
             pulsos = ISRCounter;
             RPM = 60 * pulsos / (pulsesPerRevolution * 2);
+
+            pinMode(XM, OUTPUT);
+            pinMode(YP, OUTPUT);
+            tft.setCursor(38, 35);   //display current position
+            tft.setTextColor(WHITE);
+            tft.setTextSize(3);
+            tft.print("RPM:");
+            
+            tft.setCursor(110, 35);                                  
+            tft.setTextSize(3);
+            tft.setTextColor(WHITE);
+            tft.print(RPM);
             
             //se reestablecen los valores
             ISRCounter = 0;
             pulsos = 0;
             Time = millis();
         }
-
-        if (CWstatus == 1) cur_pos++;
-        if (CCWstatus == 1) cur_pos--;
-        if (cur_pos == Number || cur_pos == (-Number)) cur_pos = 0;
     
         pinMode(XM, OUTPUT);
         pinMode(YP, OUTPUT);
@@ -378,7 +386,6 @@ void loop()
         tft.setTextSize(3);
         tft.setTextColor(WHITE);
         tft.print(RPM);
-
             
         TSPoint p = ts.getPoint();  //Get touch point
         
